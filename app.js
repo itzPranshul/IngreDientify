@@ -1,5 +1,5 @@
 const express = require('express');
-const mongoose = require('mongoose');  // Corrected spelling
+const mongoose = require('mongoose'); 
 const dotenv = require('dotenv');
 
 // Load environment variables from the configs/.env file
