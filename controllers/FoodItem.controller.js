@@ -1,54 +1,69 @@
-const FoodItem = require('../models/FoodItem.model');  // Import the FoodItem model
+// controllers/foodItemController.js
 
-// Controller to add a new food item
-const addFoodItem = async (req, res) => {
+const FoodItem = require('../models/FoodItem.model');
+const { calculateHealthScore } = require('../services/healthScoring');
+
+// Controller to add food item
+exports.addFoodItem = async (req, res) => {
     try {
-        // Get the data from the request body
         const {
-            name,
-            servingSize,
-            calories,
-            fats,
-            saturatedFats,
-            transFats,
-            sugars,
-            fiber,
-            proteins,
-            sodium,
-            vitamins
+            name, servingSize, calories, fats, sugars, fiber, proteins, sodium,
+            preservatives, artificialSweeteners, artificialColors, vitamins
         } = req.body;
 
-        // Create a new FoodItem instance
-        const newFoodItem = new FoodItem({
+        // Create the food item object from request data
+        const foodItemData = {
             name,
             servingSize,
-            calories,
-            fats,
-            saturatedFats,
-            transFats,
-            sugars,
-            fiber,
-            proteins,
-            sodium,
+            calories: {
+                amountPer100g: calories.amountPer100g
+            },
+            fats: {
+                amountPer100g: fats.amountPer100g,
+                saturatedFats: fats.saturatedFats,
+                transFats: fats.transFats
+            },
+            sugars: {
+                amountPer100g: sugars.amountPer100g
+            },
+            fiber: {
+                amountPer100g: fiber.amountPer100g
+            },
+            proteins: {
+                amountPer100g: proteins.amountPer100g
+            },
+            sodium: {
+                amountPer100g: sodium.amountPer100g
+            },
+            preservatives,
+            artificialSweeteners,
+            artificialColors,
             vitamins
-        });
+        };
 
-        // Save the food item in the database
-        const savedFoodItem = await newFoodItem.save();
+        // Calculate the health score and star rating
+        const { totalScore, starRating } = calculateHealthScore(foodItemData);
 
-        // Send a success response with the saved food item
-        return res.status(201).json({
-            message: 'Food item successfully added',
-            data: savedFoodItem
+        // Add totalScore and starRating to the food item object
+        foodItemData.totalScore = totalScore;
+        foodItemData.starRating = starRating;
+
+        // Create a new food item document
+        const newFoodItem = new FoodItem(foodItemData);
+
+        // Save the food item to the database
+        await newFoodItem.save();
+
+        // Send response with only totalScore and starRating
+        res.status(201).json({
+            totalScore: newFoodItem.totalScore,
+            starRating: newFoodItem.starRating
         });
     } catch (error) {
         console.error(error);
-        // Send an error response if something goes wrong
-        return res.status(500).json({
+        res.status(500).json({
             message: 'Error while adding the food item',
             error: error.message
         });
     }
 };
-
-module.exports = { addFoodItem };

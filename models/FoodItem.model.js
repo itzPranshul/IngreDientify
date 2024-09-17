@@ -1,22 +1,7 @@
+// models/FoodItem.js
+
 const mongoose = require('mongoose');
 
-// Define the Nutrient schema
-const nutrientSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    amountPer100g: {
-        type: Number,
-        required: true
-    },
-    unit: {
-        type: String,
-        required: true
-    }
-}, { _id: false });  // _id is false because we don't need an ID for each nutrient
-
-// Define the FoodItem schema
 const foodItemSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -27,40 +12,72 @@ const foodItemSchema = new mongoose.Schema({
         required: true
     },
     calories: {
-        type: nutrientSchema,
-        required: true
+        amountPer100g: {
+            type: Number,
+            required: true
+        }
     },
     fats: {
-        type: nutrientSchema,
-        required: true
-    },
-    saturatedFats: {
-        type: nutrientSchema,
-        required: true
-    },
-    transFats: {
-        type: nutrientSchema,
-        required: true
+        amountPer100g: {
+            type: Number,
+            required: true
+        },
+        saturatedFats: {
+            type: Number,
+            required: true
+        },
+        transFats: {
+            type: Number,
+            required: true
+        }
     },
     sugars: {
-        type: nutrientSchema,
-        required: true
+        amountPer100g: {
+            type: Number,
+            required: true
+        }
     },
     fiber: {
-        type: nutrientSchema,
-        required: true
+        amountPer100g: {
+            type: Number,
+            required: true
+        }
     },
     proteins: {
-        type: nutrientSchema,
-        required: true
+        amountPer100g: {
+            type: Number,
+            required: true
+        }
     },
     sodium: {
-        type: nutrientSchema,
+        amountPer100g: {
+            type: Number,
+            required: true
+        }
+    },
+    preservatives: {
+        type: Boolean,
         required: true
     },
-    vitamins: {
-        type: [nutrientSchema],
+    artificialSweeteners: {
+        type: Boolean,
         required: true
+    },
+    artificialColors: {
+        type: Boolean,
+        required: true
+    },
+    vitamins: [{
+        type: String
+    }],
+    // New fields for score and rating
+    totalScore: {
+        type: Number,
+        default: 0 // Default to 0 before scoring
+    },
+    starRating: {
+        type: Number,
+        default: 3 // Default to 3 stars before scoring
     }
 }, { timestamps: true, versionKey: false });
 
