@@ -4,7 +4,7 @@
   "description": "This is a backend project for storing the scanned text for food packets",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "author": "Pranshul Gupta",
   "license": "ISC",
