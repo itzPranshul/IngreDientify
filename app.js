@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose'); 
 const dotenv = require('dotenv');
+const cors = require('cores')
 const FoodItemRoutes = require('./routes/FoodItem.route')
 
 // Load environment variables from the configs/.env file
@@ -9,6 +10,7 @@ dotenv.config({ path: path.resolve(__dirname, 'configs/.env') });
 
 
 const app = express();
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -26,7 +28,7 @@ mongoose.connect(mongoURI, {
     .catch(err => console.error("MongoDB connection error:", err));
 
 app.use(express.json());
-
+app.use(cors())
 app.use('/api/food',FoodItemRoutes)
 
 app.listen(PORT, () => {
